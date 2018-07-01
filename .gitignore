@@ -1,0 +1,10 @@
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+
+!.gitkeep
+
+/.mssh
+/test*.yaml

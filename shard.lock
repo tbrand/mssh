@@ -1,0 +1,6 @@
+version: 1.0
+shards:
+  ssh2:
+    github: datanoise/ssh2.cr
+    commit: 778a060e4a683ef587a2896840278030e59cc013
+

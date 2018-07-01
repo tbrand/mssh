@@ -1,0 +1,20 @@
+name: mssh
+version: 0.1.0
+
+authors:
+  - taicsuzu <taicsuzu@yahoo-corp.jp>
+
+targets:
+  mssh:
+    main: src/runner.cr
+
+crystal: 0.25.0
+
+license: MIT
+
+dependencies:
+  ssh2:
+    github: datanoise/ssh2.cr
+
+executables:
+  - mssh

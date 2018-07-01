@@ -1,0 +1,10 @@
+groups:
+  - name: group
+    nodes:
+      - host: host
+        port: 2222
+
+jobs:
+  - name: job
+    commands:
+      - command

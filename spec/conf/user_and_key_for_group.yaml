@@ -1,0 +1,12 @@
+groups:
+  - name: group
+    nodes:
+      - host: host_1
+      - host: host_2
+    user: user
+    key: key
+
+jobs:
+  - name: job
+    commands:
+      - command
