@@ -1,8 +1,13 @@
 <p align="center">
-  :rocket::rocket: **Mssh** :rocket::rocket:
+  :rocket::rocket: <b>Mssh</b> :rocket::rocket:
 </p>
 
-- Simple and powerful job executor on remote nodes
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/3483230/42132471-7e8fff0a-7d53-11e8-99a6-7df22e38d941.gif" width="180"/>
+  <br>
+  <br>
+  <i>Simple and powerful job executor on remote nodes</i>
+</p>
 
 ---
 
@@ -29,7 +34,7 @@ For the execution
 ./bin/mssh -c awesome.yaml -j my-awesome-job -g my-instances
 ```
 
-The configuration structure is very flexible.
+The configuration structure is very flexible. 
 
 **You can see other sample on [spec/conf]().**
 
