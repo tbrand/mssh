@@ -4,6 +4,7 @@ require "./mock/*"
 
 include Mssh
 
+Mssh::Defaults.cache
 Mssh::Logger.set_log_level("none")
 
 def path(filename : String) : String
@@ -57,9 +58,39 @@ end
 def assert_executor(a : AssertedExecutor, n : Int32, host : String, port : Int32, username : String,
                     pubkey : String, commands : Array(String), log_dir : String)
   a.commands[n][:host].should eq(host)
-  a.commands[0][:port].should eq(port)
+  a.commands[n][:port].should eq(port)
   a.commands[n][:username].should eq(username)
   a.commands[n][:pubkey].should eq(pubkey)
   a.commands[n][:commands].should eq(commands)
   a.commands[n][:log_dir].should eq(log_dir)
+end
+
+def default_user
+  Defaults.user
+end
+
+def default_port
+  Defaults.port
+end
+
+def default_key
+  Defaults.key
+end
+
+def default_log_dir
+  Defaults.log_dir
+end
+
+def simulate_execution
+  c = Config.global
+
+  Queue.init(1)
+
+  c.jobs.each do |job|
+    job.queued(c.groups)
+  end
+
+  Queue.global.queue.not_nil!.each do |executable|
+    executable.exec
+  end
 end

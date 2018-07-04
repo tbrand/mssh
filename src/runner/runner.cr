@@ -6,7 +6,7 @@ module Mssh
     @group       : String?
     @set         : String?
     @parallel    : Int32 = 1
-    @log_dir     : String = default_log_dir
+    @log_dir     : String = Defaults.log_dir
 
     def initialize
     end
@@ -41,8 +41,7 @@ module Mssh
 
         parser.on("-p NUM", "--parallel=NUM", "number of parallel execution") do |num|
           @parallel = num.to_i
-
-          raise "\n\n  sorry, parallel execution is not supported now.\n\n  see => URL\n\n" if @parallel > 1
+          # raise "\n\n  sorry, parallel execution is not supported now.\n\n  see => URL\n\n" if @parallel > 1
         end
 
         parser.on("-h", "--help", "show this help") do

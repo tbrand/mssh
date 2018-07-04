@@ -10,9 +10,9 @@ module Mssh
         group.nodes.each do |node|
           executable = Executable.new(
             node.host,
-            node.port || group.port || default_port,
-            node.user || group.user || default_user,
-            node.key  || group.key  || default_key,
+            node.port || group.port || Mssh::Defaults.port,
+            node.user || group.user || Mssh::Defaults.user,
+            node.key  || group.key  || Mssh::Defaults.key,
             @commands,
             __log_dir,
           )

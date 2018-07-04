@@ -17,11 +17,41 @@ module Mssh
       queue
     end
 
+    getter queue   : Array(Executable) = [] of Executable
+
     @status  : Status = Status::NotReady
-    @running : Int32 = 0
-    @queue   : Array(Executable) = [] of Executable
+    @procs   : Array(Process) = [] of Process
 
     def initialize(@parallel : Int32)
+    end
+
+    def loop
+      spawn do
+        loop do
+          @procs.each do |proc|
+            @procs.delete(proc) if proc.terminated?
+          end
+
+          if @procs.size < @parallel && @queue.size > 0
+            L.verbose "dequeue another job (running: #{@procs.size}, queue size: #{@queue.size})"
+
+            job = @queue.shift
+
+            @procs << Process.fork do
+              job.exec
+            end
+          end
+
+          if @procs.size == 0 && @queue.size == 0 && @status == Status::Enqueued
+            L.info "finished every jobs 😎"
+            break
+          end
+
+          sleep 0.1
+        end
+
+        @status = Status::Fin
+      end
     end
 
     def <<(executable : Executable)
@@ -29,34 +59,8 @@ module Mssh
     end
 
     def enqueue(executable : Executable)
+      L.verbose "enqueue new job (running: #{@procs.size}, queue size: #{@queue.size})"
       @queue << executable
-
-      check
-    end
-
-    def handle
-      @running -= 1
-
-      check
-    end
-
-    def check
-      if !dequeue? && @queue.empty? && @running == 0 && @status == Status::Enqueued
-        L.info "finished every jobs 😎"
-
-        @status = Status::Fin
-      end
-    end
-
-    def dequeue? : Bool
-      return false if @queue.empty?
-      return false if @running >= @parallel
-
-      @running += 1
-
-      spawn @queue.shift.exec
-
-      true
     end
 
     def wait
