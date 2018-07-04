@@ -22,8 +22,6 @@ module Mssh
 
     rescue e : Exception
       L.error e.message.not_nil!
-    ensure
-      Queue.global.handle
     end
 
     include Mssh

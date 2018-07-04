@@ -13,7 +13,7 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host", default_port, default_user, default_key, ["command"], default_log_dir)
   end
@@ -31,7 +31,7 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host_1", default_port, "user_1", "key_1", ["command"], default_log_dir)
     assert_executor(a, 1, "host_2", default_port, "user_2", "key_2", ["command"], default_log_dir)
@@ -50,7 +50,7 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host_1", default_port, "user", "key", ["command"], default_log_dir)
     assert_executor(a, 1, "host_2", default_port, "user", "key", ["command"], default_log_dir)
@@ -69,7 +69,7 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host_1", default_port, "user_1", "key_1", ["command"], default_log_dir)
     assert_executor(a, 1, "host_2", default_port, "user_2", "key_2", ["command"], default_log_dir)
@@ -88,7 +88,7 @@ describe Mssh::Config do
     assert_job(c.jobs[1], "job_2", ["command 2"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job_1", "job_2"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host", default_port, default_user, default_key, ["command 1"], default_log_dir)
     assert_executor(a, 1, "host", default_port, default_user, default_key, ["command 2"], default_log_dir)
@@ -109,7 +109,7 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group_1", "group_2"])
+    simulate_execution
 
     assert_executor(a, 0, "host_1", default_port, default_user, default_key, ["command"], default_log_dir)
     assert_executor(a, 1, "host_2", default_port, default_user, default_key, ["command"], default_log_dir)
@@ -127,11 +127,11 @@ describe Mssh::Config do
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
 
-    c.execute(["job"], ["group_3"])
+    simulate_execution
 
-    assert_executor(a, 0, "host_3", default_port, default_user, default_key, ["command"], default_log_dir)
-    assert_executor(a, 1, "host_1", default_port, default_user, default_key, ["command"], default_log_dir)
-    assert_executor(a, 2, "host_2", default_port, default_user, default_key, ["command"], default_log_dir)
+    assert_executor(a, 0, "host_1", default_port, default_user, default_key, ["command"], default_log_dir)
+    assert_executor(a, 1, "host_2", default_port, default_user, default_key, ["command"], default_log_dir)
+    assert_executor(a, 2, "host_3", default_port, default_user, default_key, ["command"], default_log_dir)
   end
 
   it "port for node" do
@@ -145,7 +145,7 @@ describe Mssh::Config do
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host", 2222, default_user, default_key, ["command"], default_log_dir)
   end
@@ -161,7 +161,7 @@ describe Mssh::Config do
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
 
-    c.execute(["job"], ["group"])
+    simulate_execution
 
     assert_executor(a, 0, "host", 2222, default_user, default_key, ["command"], default_log_dir)
   end
@@ -179,7 +179,7 @@ describe Mssh::Config do
     assert_sets(c.sets, 1)
     assert_set(c.sets.not_nil![0], ["job"], ["group"])
 
-    c.execute([] of String, [] of String, "set")
+    simulate_execution
 
     assert_executor(a, 0, "host", default_port, default_user, default_key, ["command"], default_log_dir)
   end

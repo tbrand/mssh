@@ -39,6 +39,7 @@ module Mssh
       L.verbose "set degree of parallelism to #{@parallel} for job queue"
 
       Queue.init(@parallel)
+      Queue.global.loop
 
       jobs = find_jobs(job_names)
       groups = find_groups(group_names)
