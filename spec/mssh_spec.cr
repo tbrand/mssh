@@ -8,7 +8,7 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group")
     assert_nodes(c.groups[0].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host")
+    assert_node(c.groups[0].nodes.not_nil![0], "host")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -25,8 +25,8 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group")
     assert_nodes(c.groups[0].nodes, 2)
-    assert_node(c.groups[0].nodes[0], "host_1", "user_1", "key_1")
-    assert_node(c.groups[0].nodes[1], "host_2", "user_2", "key_2")
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1", "user_1", "key_1")
+    assert_node(c.groups[0].nodes.not_nil![1], "host_2", "user_2", "key_2")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -44,8 +44,8 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group", "user", "key")
     assert_nodes(c.groups[0].nodes, 2)
-    assert_node(c.groups[0].nodes[0], "host_1")
-    assert_node(c.groups[0].nodes[1], "host_2")
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1")
+    assert_node(c.groups[0].nodes.not_nil![1], "host_2")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -63,8 +63,8 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group", "user_1", "key_1")
     assert_nodes(c.groups[0].nodes, 2)
-    assert_node(c.groups[0].nodes[0], "host_1")
-    assert_node(c.groups[0].nodes[1], "host_2", "user_2", "key_2")
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1")
+    assert_node(c.groups[0].nodes.not_nil![1], "host_2", "user_2", "key_2")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -82,7 +82,7 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group")
     assert_nodes(c.groups[0].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host")
+    assert_node(c.groups[0].nodes.not_nil![0], "host")
     assert_jobs(c.jobs, 2)
     assert_job(c.jobs[0], "job_1", ["command 1"])
     assert_job(c.jobs[1], "job_2", ["command 2"])
@@ -103,8 +103,8 @@ describe Mssh::Config do
     assert_group(c.groups[1], "group_2")
     assert_nodes(c.groups[0].nodes, 1)
     assert_nodes(c.groups[1].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host_1")
-    assert_node(c.groups[1].nodes[0], "host_2")
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1")
+    assert_node(c.groups[1].nodes.not_nil![0], "host_2")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -121,8 +121,14 @@ describe Mssh::Config do
 
     assert_groups(c.groups, 3)
     assert_group(c.groups[0], "group_1")
+    assert_nodes(c.groups[0].nodes, 1)
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1")
     assert_group(c.groups[1], "group_2")
+    assert_nodes(c.groups[1].nodes, 1)
+    assert_node(c.groups[1].nodes.not_nil![0], "host_2")
     assert_group(c.groups[2], "group_3")
+    assert_nodes(c.groups[2].nodes, 1)
+    assert_node(c.groups[2].nodes.not_nil![0], "host_3")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 0)
@@ -134,6 +140,29 @@ describe Mssh::Config do
     assert_executor(a, 2, "host_3", default_port, default_user, default_key, ["command"], default_log_dir)
   end
 
+  it "group includes groups without nodes" do
+    a = AssertedExecutor.new
+    c = Config.init(path("group_includes_groups_without_nodes.yaml"), 1, default_log_dir, a)
+
+    assert_groups(c.groups, 3)
+    assert_group(c.groups[0], "group_1")
+    assert_nodes(c.groups[0].nodes, 1)
+    assert_node(c.groups[0].nodes.not_nil![0], "host_1")
+    assert_group(c.groups[1], "group_2")
+    assert_nodes(c.groups[1].nodes, 1)
+    assert_node(c.groups[1].nodes.not_nil![0], "host_2")
+    assert_group(c.groups[2], "group_3")
+    assert_nodes(c.groups[2].nodes, 0)
+    assert_jobs(c.jobs, 1)
+    assert_job(c.jobs[0], "job", ["command"])
+    assert_sets(c.sets, 0)
+
+    simulate_execution
+
+    assert_executor(a, 0, "host_1", default_port, default_user, default_key, ["command"], default_log_dir)
+    assert_executor(a, 1, "host_2", default_port, default_user, default_key, ["command"], default_log_dir)
+  end
+
   it "port for node" do
     a = AssertedExecutor.new
     c = Config.init(path("port_for_node.yaml"), 1, default_log_dir, a)
@@ -141,7 +170,7 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group")
     assert_nodes(c.groups[0].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host", nil, nil, 2222)
+    assert_node(c.groups[0].nodes.not_nil![0], "host", nil, nil, 2222)
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
 
@@ -157,7 +186,7 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group", nil, nil, 2222)
     assert_nodes(c.groups[0].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host")
+    assert_node(c.groups[0].nodes.not_nil![0], "host")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
 
@@ -173,7 +202,7 @@ describe Mssh::Config do
     assert_groups(c.groups, 1)
     assert_group(c.groups[0], "group")
     assert_nodes(c.groups[0].nodes, 1)
-    assert_node(c.groups[0].nodes[0], "host")
+    assert_node(c.groups[0].nodes.not_nil![0], "host")
     assert_jobs(c.jobs, 1)
     assert_job(c.jobs[0], "job", ["command"])
     assert_sets(c.sets, 1)
