@@ -22,8 +22,12 @@ def assert_group(group : Group, name : String, user : String? = nil, key : Strin
   group.port.should eq(port)
 end
 
-def assert_nodes(nodes : Nodes, size : Int32)
-  nodes.size.should eq(size)
+def assert_nodes(nodes : Nodes?, size : Int32)
+  if size == 0
+    nodes.should be_nil
+  else
+    nodes.not_nil!.size.should eq(size)
+  end
 end
 
 def assert_node(node : Node, host : String, user : String? = nil, key : String? = nil, port : Int32? = nil)

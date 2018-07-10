@@ -85,8 +85,6 @@ module Mssh
 
       group_names.each do |group_name|
         if group = @groups.find { |g| g.name == group_name }
-          group.flatten
-
           g << group
         end
       end

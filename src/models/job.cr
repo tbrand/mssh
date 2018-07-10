@@ -7,7 +7,7 @@ module Mssh
 
     def queued(groups : Groups)
       groups.each do |group|
-        group.nodes.each do |node|
+        group.flatten_nodes.each do |node|
           executable = Executable.new(
             node.host,
             node.port || group.port || Mssh::Defaults.port,
