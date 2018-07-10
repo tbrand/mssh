@@ -59,7 +59,6 @@ I'll write them up as soon as possible.
 ## Development
 
 **There are missing features**
-- [ ] Parallel execution
 - [ ] Login with password
 - [ ] Suspend execution when number of errors reaches to the specified number
 
