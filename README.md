@@ -36,7 +36,7 @@ For the execution
 
 The configuration structure is very flexible. 
 
-**You can see other sample on [spec/conf]().**
+**You can see other sample on [spec/conf](https://github.com/tbrand/mssh/tree/master/spec/conf).**
 
 ## Installation
 
