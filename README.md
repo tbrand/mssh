@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/3483230/42132471-7e8fff0a-7d53-11e8-99a6-7df22e38d941.gif" width="1000"/>
+  <img src="https://user-images.githubusercontent.com/3483230/43590592-5088b17a-96ac-11e8-90fc-eaa0560db439.gif" width="1000"/>
   <br>
   <br>
   <i>Simple and powerful job executor on remote nodes</i>
