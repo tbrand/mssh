@@ -58,9 +58,7 @@ I'll write them up as soon as possible.
 
 ## Development
 
-**There are missing features**
-- [ ] Login with password
-- [ ] Suspend execution when number of errors reaches to the specified number
+See the [issues](https://github.com/tbrand/mssh/issues). Or you can open new issues on it.
 
 ## Contributing
 

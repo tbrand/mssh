@@ -41,7 +41,6 @@ module Mssh
 
         parser.on("-p NUM", "--parallel=NUM", "number of parallel execution") do |num|
           @parallel = num.to_i
-          # raise "\n\n  sorry, parallel execution is not supported now.\n\n  see => URL\n\n" if @parallel > 1
         end
 
         parser.on("-h", "--help", "show this help") do
@@ -60,9 +59,7 @@ module Mssh
       L.info "start runnning mssh..."
 
       unless config_path = @config_path
-        puts t_error("specify config path by '-c PATH'")
-        puts t_error("`mssh -h` to show help message.")
-        exit -1
+        raise "specify config path by '-c' PATH. `mssh -h` to show help message."
       end
 
       jobs = if job = @job
@@ -79,6 +76,46 @@ module Mssh
 
       config = Mssh::Config.init(config_path, @parallel, @log_dir)
       config.execute(jobs, groups, @set)
+    rescue e : Exception
+      L.error e.message.not_nil!
+
+      if _config = config
+        if _config.groups.size > 0
+          L.error ""
+          L.error "Here are available groups (specify by '-g')"
+
+          _config.groups.each do |group|
+            L.error " - #{group.name}"
+          end
+        else
+          L.error ""
+          L.error "No groups are found in the configuration."
+        end
+
+        if _config.jobs.size > 0
+          L.error ""
+          L.error "Here are available jobs (specify by '-j')"
+
+          _config.jobs.each do |job|
+            L.error " - #{job.name}"
+          end
+        else
+          L.error ""
+          L.error "No jobs are found in the configuration"
+        end
+
+        if _config.sets && _config.sets.not_nil!.size > 0
+          L.error ""
+          L.error "Here are available sets (specify by '-s')"
+
+          _config.sets.not_nil!.each do |set|
+            L.error " - #{set.name}"
+          end
+        else
+          L.error ""
+          L.error "No sets are found in the configuration"
+        end
+      end
     end
 
     include Mssh
