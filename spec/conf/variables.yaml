@@ -1,0 +1,21 @@
+variables:
+  - name: DEPLOYMENT_PATH
+    value: /var/www
+  - name: CRYSTAL_VERSION
+    value: 0.27.2
+  - name: USER
+    value: /root
+
+groups:
+  - name: deploy
+    user: user_1
+    nodes:
+      - host: host_1
+
+jobs:
+  - name: test
+    commands:
+      - cd ${USER}
+      - echo "This is an awesome execution!"
+      - echo "DEPLOYMENT_PATH => ${DEPLOYMENT_PATH}"
+      - echo "CRYSTAL_VERSION => ${CRYSTAL_VERSION}"
