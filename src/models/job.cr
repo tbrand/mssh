@@ -5,31 +5,18 @@ module Mssh
       commands: Array(String),
     )
 
-    def process_commands(variables : Variables?)
+    def process_commands(variables : VariableList)
+      return @commands unless variables_not_nil = variables
+
       @commands.each_with_index do |cmd, i|
-        if cmd.includes? "${"
-          # throws exception if variable prefix defines but variables section does not define
-          raise "There is no defined variable in yaml file" unless variables
-
-          # start index
-          s = cmd.index("${").not_nil!
-
-          # end index
-          e = cmd.index("}").not_nil!
-
-          # trim as variable name for yaml file
-          var_name = cmd[s..e].delete { |s| ['$', '{', '}'].includes?(s) }
-
-          if vv = variables.find { |v| v.name == var_name }
-            @commands[i] = cmd.gsub("${#{var_name}}", vv.value)
-          end
-        end
+        commands[i] = variables_not_nil.reduce(cmd) { |c, v| c.gsub(/\${#{v[:name]}}/, v[:value]) }
       end
 
       @commands
     end
 
     def queued(groups : Groups, variables : Variables?)
+      v_list = to_tupple(variables)
       groups.each do |group|
         group.flatten_nodes.each do |node|
           executable = Executable.new(
@@ -37,7 +24,7 @@ module Mssh
             node.port || group.port || Mssh::Defaults.port,
             node.user || group.user || Mssh::Defaults.user,
             node.key || group.key || Mssh::Defaults.key,
-            process_commands(variables),
+            process_commands(v_list),
             __log_dir,
           )
 
