@@ -91,7 +91,7 @@ def simulate_execution
   Queue.init(1)
 
   c.jobs.each do |job|
-    job.queued(c.groups)
+    job.queued(c.groups, c.variables)
   end
 
   Queue.global.queue.not_nil!.each do |executable|

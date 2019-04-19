@@ -4,19 +4,21 @@ module Mssh
       groups: Groups,
       jobs: Jobs,
       sets: Sets?,
+      variables: Variables?,
     )
 
     setter executor : Executor? = nil
-    setter log_dir  : String?   = nil
-    setter parallel : Int32     = 1
+    setter log_dir : String? = nil
+    setter parallel : Int32 = 1
 
     @@config : Config? = nil
 
     def self.init(
-         config_path : String,
-         parallel    : Int32,
-         log_dir     : String,
-         executor    : Executor = ExecutorDefault.new) : Config
+      config_path : String,
+      parallel : Int32,
+      log_dir : String,
+      executor : Executor = ExecutorDefault.new
+    ) : Config
       config = Config.from_yaml(File.read(config_path))
       config.executor = executor
       config.parallel = parallel
@@ -61,8 +63,8 @@ module Mssh
       L.verbose "groups: #{groups.map { |g| g.name }}"
 
       jobs.each do |job|
-        L.verbose "queueing #{job.name} for #{groups.map { |g| g.name}}"
-        job.queued(groups)
+        L.verbose "queueing #{job.name} for #{groups.map { |g| g.name }}"
+        job.queued(groups, @variables)
       end
 
       Queue.global.wait

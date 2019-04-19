@@ -212,4 +212,20 @@ describe Mssh::Config do
 
     assert_executor(a, 0, "host", default_port, default_user, default_key, ["command"], default_log_dir)
   end
+
+  it "variables" do
+    a = AssertedExecutor.new
+    c = Config.init(path("variables.yaml"), 1, default_log_dir, a)
+
+    simulate_execution
+
+    result = [
+      "cd /root",
+      "echo \"This is an awesome execution!\"",
+      "echo \"DEPLOYMENT_PATH => /var/www\"",
+      "echo \"CRYSTAL_VERSION => 0.27.2\"",
+    ]
+
+    a.commands.first[:commands].should eq result
+  end
 end
